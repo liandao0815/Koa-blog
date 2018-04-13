@@ -5,21 +5,18 @@
   "license": "MIT",
   "dependencies": {
     "babel-polyfill": "^6.26.0",
-    "ejs": "^2.5.8",
     "jsonwebtoken": "^8.2.1",
     "koa": "^2.5.0",
     "koa-bodyparser": "^4.2.0",
+    "koa-compress": "^2.0.0",
     "koa-favicon": "^2.0.1",
-    "koa-multer": "^1.0.2",
     "koa-router": "^7.4.0",
     "koa-session": "^5.8.1",
     "koa-static": "^4.0.2",
-    "koa-views": "^6.1.4",
     "log4js": "^2.5.3",
     "mongoose": "^5.0.14"
   },
   "devDependencies": {
-    "babel-core": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-stage-0": "^6.24.1",
     "babel-register": "^6.26.0",
