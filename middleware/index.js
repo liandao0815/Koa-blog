@@ -1,11 +1,10 @@
-import base from './base'
 import logger from './logger'
 import cors from './cors'
-import redirect from './redirect'
+import token from './token'
+import vendor from './vendor'
+import fallback from './fallback'
 
 export default app => {
-  base(app)
-  cors(app)
-  logger(app)
-  redirect(app)
+  const modules = [logger, cors, token, vendor, fallback]
+  modules.forEach(item => item(app))
 }

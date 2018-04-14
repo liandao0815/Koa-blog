@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <form action="/api/user/register" method="POST">
+    <input type="text" name="username">
+    <input type="password" name="password">
+    <button>提交</button>
+  </form>
+  <!-- <input type="text" name="user" id="user">
+  <input type="password" name="pws" id="pwd">
+  <button id="submit">提交</button>
+  <script>
+    let user = document.getElementById('user')
+    let pwd = document.getElementById('pwd')
+    let submit = document.getElementById('submit')
+    let ajax = new XMLHttpRequest()
+    submit.onclick = function () {
+      ajax.open('GET', '/')
+      ajax.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
+      ajax.send(`user=${user.value}&pwd=${pwd.value}`)
+      ajax.onload = function () {
+        console.log(ajax.responseText)
+      }
+    }
+  </script> -->
+</body>
+</html>

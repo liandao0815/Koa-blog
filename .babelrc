@@ -9,5 +9,6 @@
       }
     ],
     "stage-0"
-  ]
+  ],
+  "plugins": ["dynamic-import-node"]
 }
