@@ -7,13 +7,13 @@ const log4jsConf = {
     },
     http: {
       type: 'dateFile',
-      filename: path.resolve(__dirname, '../log/http'),
+      filename: path.resolve(__dirname, '../../log/http'),
       pattern: '-yyyy-MM-dd.log',
       alwaysIncludePattern: true
     },
     error: {
       type: 'file',
-      filename: path.resolve(__dirname, '../log/error.log'),
+      filename: path.resolve(__dirname, '../../log/error.log'),
       maxLogSize: 1048576,
       backups: 10
     }

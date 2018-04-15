@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import { dbUrl, dbUser, dbPassword } from '../config/dbConf'
+import { dbUrl, dbUser, dbPassword } from '../config/database'
 
 mongoose.Promise = global.Promise
 

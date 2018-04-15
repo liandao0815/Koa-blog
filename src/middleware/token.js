@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 import { User } from '../database/model'
-import { TOKEN_SECRET } from '../config/appConf'
+import { TOKEN_SECRET } from '../config/application'
 import Result, { ERROR_INFO } from '../utils/result'
 
 export default app => {

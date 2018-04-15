@@ -1,13 +1,13 @@
 import Koa from 'koa'
 import middleware from './middleware'
-import router from './router'
-import { HOST, PORT } from './config/appConf'
+import controller from './controller'
+import { HOST, PORT } from './config/application'
 
 const app = new Koa()
 
 middleware(app)
 
-router(app)
+controller(app)
 
 app.listen(PORT, HOST, () => {
   console.log(`Server is running at http://${HOST}:${PORT}`)

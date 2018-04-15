@@ -5,6 +5,6 @@ import vendor from './vendor'
 import fallback from './fallback'
 
 export default app => {
-  const modules = [logger, cors, token, vendor, fallback]
-  modules.forEach(item => item(app))
+  const middlewares = [logger, cors, token, vendor, fallback]
+  middlewares.forEach(item => item(app))
 }
