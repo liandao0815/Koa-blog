@@ -1,14 +1,4 @@
 {
-  "presets": [
-    [
-      "env",
-      {
-        "targets": {
-          "node": "current"
-        }
-      }
-    ],
-    "stage-0"
-  ],
-  "plugins": ["dynamic-import-node"]
+  "presets": [["env", { "targets": { "node": "current" } }], "stage-0"],
+  "plugins": ["dynamic-import-node", "transform-decorators-legacy"]
 }

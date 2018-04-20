@@ -11,8 +11,4 @@ export default class Crypto {
     hash.update(this.salt + this.encryptData)
     return hash.digest('hex')
   }
-
-  compare(compareData) {
-    return this.encrypt() === compareData
-  }
 }
