@@ -76,7 +76,6 @@ export default class ArticleService {
   async select() {
     const conditions = { _id: this.articleid, privated: false }
     const options = { category: 0, privated: 0 }
-    console.log(conditions)
     await Article.update(conditions, {
       $inc: { readCount: 1 }
     })

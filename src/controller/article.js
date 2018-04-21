@@ -30,7 +30,6 @@ router.get('/select', async ctx => {
 
 router.get('/query', async ctx => {
   const { pageSize, currentPage } = ctx.query
-  console.log(pageSize, currentPage)
   ctx.body = await ArticleService.query(pageSize, currentPage)
 })
 
