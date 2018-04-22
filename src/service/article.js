@@ -81,7 +81,7 @@ export default class ArticleService {
     })
     const articleData = await Article.findOne(conditions, options).populate({
       path: 'comment',
-      populate: { path: 'user', select: 'username' }
+      populate: { path: 'user', select: 'username avatar' }
     })
     return Result.success(articleData)
   }
@@ -98,6 +98,8 @@ export default class ArticleService {
       .skip(skipCount)
       .limit(parseInt(pageSize))
       .sort(sort)
+      .populate({ path: 'author', select: 'username avatar' })
+
     const currentCount = articleData.length
     const queryData = { totalCount, currentCount, articleData }
 
