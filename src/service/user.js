@@ -83,6 +83,11 @@ export default class UserService {
 
   @handleError
   async uploadAvatar(headers) {
+    const avatarType = ['image/jpeg', 'image/png']
+    if (!avatarType.includes(this.avatar.type)) {
+      return Result.error(ERROR_INFO.InvalidFile.code, ERROR_INFO.InvalidFile.msg)
+    }
+
     const username = await getUsername(headers)
     const avatarName = `${username}${path.extname(this.avatar.name)}`
     const uploadPath = path.resolve(__dirname, `../public/upload/${avatarName}`)

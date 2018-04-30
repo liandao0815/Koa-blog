@@ -54,10 +54,23 @@ export default class CategoryService {
   @handleError
   async modify(headers) {
     const userid = await getUserId(headers)
-    await Category.update(
-      { _id: this.categoryid, author: userid },
-      { categoryname: this.categoryname }
-    )
-    return Result.success(null)
+    const conditions = {
+      categoryname: this.categoryname,
+      author: userid
+    }
+    const categoryData = await Category.findOne(conditions)
+
+    if (categoryData) {
+      return Result.error(
+        ERROR_INFO.ExistCategory.code,
+        ERROR_INFO.ExistCategory.msg
+      )
+    } else {
+      await Category.update(
+        { _id: this.categoryid, author: userid },
+        { categoryname: this.categoryname }
+      )
+      return Result.success(null)
+    }
   }
 }

@@ -21,5 +21,7 @@ export const ERROR_INFO = {
 
   DatabaseError: { code: 16, msg: '数据操作错误，请重新尝试' },
 
-  ExistCategory: { code: 17, msg: '新增分类无效，该分类已存在' }
+  ExistCategory: { code: 17, msg: '新增分类无效，该分类已存在' },
+
+  InvalidFile: { code: 18, msg: '文件格式错误，请重新上传' }
 }
