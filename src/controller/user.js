@@ -3,7 +3,7 @@ import UserService from '../service/user'
 
 const router = new Router({ prefix: '/api/user' })
 
-router.post('/info', async ctx => {
+router.get('/info', async ctx => {
   ctx.body = await UserService.getUserInfo(ctx.headers)
 })
 
