@@ -25,7 +25,7 @@ export default class UserService {
   @handleError
   static async getUserInfo(headers) {
     const token = getToken(headers)
-    const userData = User.findOne({ token })
+    const userData = User.findOne({ token }, { password: 0 })
     return Result.success(userData)
   }
 
