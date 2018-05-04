@@ -3,6 +3,10 @@ import UserService from '../service/user'
 
 const router = new Router({ prefix: '/api/user' })
 
+router.post('/info', async ctx => {
+  ctx.body = await UserService.getUserInfo(ctx.headers)
+})
+
 router.post('/register', async ctx => {
   const user = new UserService(ctx.request.body)
   ctx.body = await user.register()

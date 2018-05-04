@@ -23,6 +23,13 @@ export default class UserService {
   }
 
   @handleError
+  static async getUserInfo(headers) {
+    const token = getToken(headers)
+    const userData = User.findOne({ token })
+    return Result.success(userData)
+  }
+
+  @handleError
   async register() {
     const userData = await User.findOne({ username: this.username })
     if (userData) {
@@ -85,7 +92,10 @@ export default class UserService {
   async uploadAvatar(headers) {
     const avatarType = ['image/jpeg', 'image/png']
     if (!avatarType.includes(this.avatar.type)) {
-      return Result.error(ERROR_INFO.InvalidFile.code, ERROR_INFO.InvalidFile.msg)
+      return Result.error(
+        ERROR_INFO.InvalidFile.code,
+        ERROR_INFO.InvalidFile.msg
+      )
     }
 
     const username = await getUsername(headers)
