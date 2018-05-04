@@ -11,9 +11,9 @@ const userSchema = new Schema(
 
     token: { type: String, default: '' },
 
-    avatar: { type: String, default: '' },
+    avatar: { type: String, default: '/upload/avatar_liandao08.jpg' },
 
-    introduction: { type: String, default: '' },
+    introduction: { type: String, default: '这个人很懒，什么都每留下来' },
 
     collect: [{ type: ObjectId, ref: 'Article' }]
   },
