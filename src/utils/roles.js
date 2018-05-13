@@ -9,9 +9,3 @@ export async function getUserId(headers) {
   const userData = await User.findOne({ token })
   return userData._id
 }
-
-export async function getUsername(headers) {
-  const token = getToken(headers)
-  const userData = await User.findOne({ token })
-  return userData.username
-}

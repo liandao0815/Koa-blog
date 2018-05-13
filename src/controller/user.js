@@ -29,8 +29,12 @@ router.post('/avatar', async ctx => {
 })
 
 router.post('/collect', async ctx => {
-  const { articleid } = ctx.request.body
-  ctx.body = await UserService.handleCollect(articleid, ctx.headers)
+  const { articleid, cancelCollect } = ctx.request.body
+  ctx.body = await UserService.handleCollect(
+    articleid,
+    cancelCollect,
+    ctx.headers,
+  )
 })
 
 export default router

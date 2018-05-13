@@ -6,11 +6,10 @@ import { getToken } from '../utils/roles'
 
 export default app => {
   app.use(async (ctx, next) => {
-    const reg = /(\/login|\/register|\/avatar)/i
-    if (
-      (ctx.method === 'GET' && !ctx.url.includes('/user')) ||
-      reg.test(ctx.url)
-    ) {
+    const urlReg = /(\/login|\/register)/i
+    const methodReg = /(GET|OPTIONS)/i
+
+    if (methodReg.test(ctx.method) || urlReg.test(ctx.url)) {
       await next()
     } else {
       const token = getToken(ctx.headers)

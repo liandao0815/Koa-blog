@@ -25,7 +25,7 @@ export default class ArticleService {
       title: xss(this.title),
       content: xss(this.content),
       category: category._id,
-      privated: 'true' === this.privated
+      privated: this.privated
     })
 
     await article.save()
@@ -40,7 +40,9 @@ export default class ArticleService {
     }
     const sort = { updateTime: -1 }
     const options = { category: 0, privated: 0 }
-    const searchData = await Article.find(conditions, options).sort(sort)
+    const searchData = await Article.find(conditions, options)
+      .sort(sort)
+      .populate('author', 'username avatar')
     return Result.success(searchData)
   }
 
@@ -65,7 +67,7 @@ export default class ArticleService {
         title: xss(this.title),
         content: xss(this.content),
         category: category._id,
-        privated: 'true' === this.privated,
+        privated: this.privated,
         updateTime: Date.now()
       }
     )
@@ -73,16 +75,25 @@ export default class ArticleService {
   }
 
   @handleError
-  async select() {
-    const conditions = { _id: this.articleid, privated: false }
+  async select(commit, headers) {
+    const userId = await getUserId(headers)
     const options = { category: 0, privated: 0 }
-    await Article.update(conditions, {
-      $inc: { readCount: 1 }
-    })
-    const articleData = await Article.findOne(conditions, options).populate({
-      path: 'comment',
-      populate: { path: 'user', select: 'username avatar' }
-    })
+    const _article = await Article.findOne({ _id: this.articleid, privated: false }, options)
+    const article = _article
+      ? _article
+      : await Article.findOne({ author: userId, _id: this.articleid })
+    const conditions = { _id: article._id }
+
+    if (commit !== 'true') {
+      await Article.update(conditions, { $inc: { readCount: 1 } })
+    }
+
+    const articleData = await Article.findOne(conditions, options)
+      .populate({
+        path: 'comment',
+        populate: { path: 'user', select: 'username avatar' }
+      })
+      .populate('author', 'username avatar')
     return Result.success(articleData)
   }
 
@@ -104,5 +115,13 @@ export default class ArticleService {
     const queryData = { totalCount, currentCount, articleData }
 
     return Result.success(queryData)
+  }
+
+  @handleError
+  static async userArticle(headers) {
+    const userid = await getUserId(headers)
+    const articleData = await Article.find({ author: userid })
+
+    return Result.success(articleData)
   }
 }

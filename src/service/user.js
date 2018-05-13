@@ -4,13 +4,9 @@ import jwt from 'jsonwebtoken'
 import xss from 'xss'
 import Crypto from '../utils/crypto'
 import { User, Article } from '../database/model'
-import {
-  TOKEN_SECRET,
-  TOKEN_EXPIRESIN,
-  PASSWORD_SALT
-} from '../config/application'
+import { TOKEN_SECRET, TOKEN_EXPIRESIN, PASSWORD_SALT } from '../config/application'
 import Result, { ERROR_INFO } from '../utils/result'
-import { getToken, getUsername } from '../utils/roles'
+import { getToken, getUserId } from '../utils/roles'
 import { handleError } from '../utils/decorator'
 
 export default class UserService {
@@ -25,23 +21,28 @@ export default class UserService {
   @handleError
   static async getUserInfo(headers) {
     const token = getToken(headers)
-    const userData = User.findOne({ token }, { password: 0 })
-    return Result.success(userData)
+    const userData = await User.findOne({ token })
+
+    try {
+      jwt.verify(userData.token, TOKEN_SECRET)
+      const _userData = await User.findOne({ token }, { password: 0 }).populate({
+        path: 'collect',
+        populate: { path: 'author', select: 'username avatar' }
+      })
+      return Result.success(_userData)
+    } catch (error) {
+      return Result.error(ERROR_INFO.InvalidToken.code, ERROR_INFO.InvalidToken.msg)
+    }
   }
 
   @handleError
   async register() {
     const userData = await User.findOne({ username: this.username })
+
     if (userData) {
-      return Result.error(
-        ERROR_INFO.ExistAccount.code,
-        ERROR_INFO.ExistAccount.msg
-      )
+      return Result.error(ERROR_INFO.ExistAccount.code, ERROR_INFO.ExistAccount.msg)
     } else if (this.username.length > 10) {
-      return Result.error(
-        ERROR_INFO.BeyondLength.code,
-        ERROR_INFO.BeyondLength.msg
-      )
+      return Result.error(ERROR_INFO.BeyondLength.code, ERROR_INFO.BeyondLength.msg)
     } else {
       const token = jwt.sign({ username: this.username }, TOKEN_SECRET, {
         expiresIn: TOKEN_EXPIRESIN
@@ -54,7 +55,7 @@ export default class UserService {
       })
       await user.save()
       return Result.success(
-        await User.findOne({ username: this.username }, { password: 0 })
+        await User.findOne({ username: this.username }, { password: 0 }).populate('collect')
       )
     }
   }
@@ -73,7 +74,7 @@ export default class UserService {
       })
       await User.updateOne({ username: this.username }, { token })
       return Result.success(
-        await User.findOne({ username: this.username }, { password: 0 })
+        await User.findOne({ username: this.username }, { password: 0 }).populate('collect')
       )
     } else {
       return Result.error(ERROR_INFO.BadAccount.code, ERROR_INFO.BadAccount.msg)
@@ -92,14 +93,18 @@ export default class UserService {
   async uploadAvatar(headers) {
     const avatarType = ['image/jpeg', 'image/png']
     if (!avatarType.includes(this.avatar.type)) {
-      return Result.error(
-        ERROR_INFO.InvalidFile.code,
-        ERROR_INFO.InvalidFile.msg
-      )
+      return Result.error(ERROR_INFO.InvalidFile.code, ERROR_INFO.InvalidFile.msg)
     }
 
-    const username = await getUsername(headers)
-    const avatarName = `${username}${path.extname(this.avatar.name)}`
+    // 删除之前的头像
+    const token = await getToken(headers)
+    const userData = await User.findOne({ token })
+    const username = userData.username
+    const oldUploadPath = path.resolve(__dirname, `../public${userData.avatar}`)
+    fs.unlinkSync(oldUploadPath)
+
+    // 添加时间戳，以禁止缓存
+    const avatarName = username + Date.now().toString() + path.extname(this.avatar.name)
     const uploadPath = path.resolve(__dirname, `../public/upload/${avatarName}`)
     const reader = fs.createReadStream(this.avatar.path)
     const writer = fs.createWriteStream(uploadPath)
@@ -107,18 +112,22 @@ export default class UserService {
 
     reader.pipe(writer)
     await User.updateOne({ username }, { avatar })
-    const userData = await User.findOne({ username }, { avatar: 1 })
-    return Result.success(userData)
+    const _userData = await User.findOne({ username }, { avatar: 1 })
+    return Result.success(_userData)
   }
 
   @handleError
-  static async handleCollect(articleid, headers) {
-    const token = getToken(headers)
-    const article = await Article.findOne({
-      _id: articleid,
-      privated: false
-    })
-    await User.update({ token }, { $addToSet: { collect: article._id } })
+  static async handleCollect(articleid, cancelCollect, headers) {
+    const userId = await getUserId(headers)
+    const _article = await Article.findOne({ _id: articleid, privated: false })
+    const article = _article ? _article : await Article.findOne({ author: userId, _id: articleid })
+
+    if (cancelCollect) {
+      await User.update({ _id: userId }, { $pull: { collect: article._id } })
+    } else {
+      await User.update({ _id: userId }, { $addToSet: { collect: article._id } })
+    }
+
     return Result.success(null)
   }
 }

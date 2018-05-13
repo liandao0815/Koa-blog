@@ -19,10 +19,7 @@ export default class CategoryService {
     const categoryData = await Category.findOne(conditions)
 
     if (categoryData) {
-      return Result.error(
-        ERROR_INFO.ExistCategory.code,
-        ERROR_INFO.ExistCategory.msg
-      )
+      return Result.error(ERROR_INFO.ExistCategory.code, ERROR_INFO.ExistCategory.msg)
     } else {
       return Result.success(await Category.create(conditions))
     }
@@ -33,10 +30,9 @@ export default class CategoryService {
     const userid = await getUserId(headers)
     if (this.categoryid) {
       const conditions = { category: this.categoryid, author: userid }
-      const categoryData = await Article.findOne(conditions).populate(
-        'category',
-        'categoryname'
-      )
+      const categoryData = await Article.find(conditions)
+        .populate('category', 'categoryname')
+        .populate('author', 'username avatar')
       return Result.success(categoryData)
     } else {
       const categoryData = await Category.find({ author: userid })
@@ -61,10 +57,7 @@ export default class CategoryService {
     const categoryData = await Category.findOne(conditions)
 
     if (categoryData) {
-      return Result.error(
-        ERROR_INFO.ExistCategory.code,
-        ERROR_INFO.ExistCategory.msg
-      )
+      return Result.error(ERROR_INFO.ExistCategory.code, ERROR_INFO.ExistCategory.msg)
     } else {
       await Category.update(
         { _id: this.categoryid, author: userid },

@@ -13,7 +13,7 @@ const userSchema = new Schema(
 
     avatar: { type: String, default: '/upload/avatar_liandao08.jpg' },
 
-    introduction: { type: String, default: '这个人很懒，什么都每留下来' },
+    introduction: { type: String, default: '这个人很懒，什么都没留下来~' },
 
     collect: [{ type: ObjectId, ref: 'Article' }]
   },
