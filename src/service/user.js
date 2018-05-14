@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 import xss from 'xss'
 import Crypto from '../utils/crypto'
 import { User, Article } from '../database/model'
-import { TOKEN_SECRET, TOKEN_EXPIRESIN, PASSWORD_SALT } from '../config/application'
+import { TOKEN_SECRET, TOKEN_EXPIRESIN, PASSWORD_SALT, DEFAULT_AVATAR } from '../config/application'
 import Result, { ERROR_INFO } from '../utils/result'
 import { getToken, getUserId } from '../utils/roles'
 import { handleError } from '../utils/decorator'
@@ -100,12 +100,12 @@ export default class UserService {
     const token = await getToken(headers)
     const userData = await User.findOne({ token })
     const username = userData.username
-    const oldUploadPath = path.resolve(__dirname, `../public${userData.avatar}`)
-    fs.unlinkSync(oldUploadPath)
+    const oldUploadPath = path.resolve(__dirname, `../../public${userData.avatar}`)
+    userData.avatar === `/upload/${DEFAULT_AVATAR}` ? null : fs.unlinkSync(oldUploadPath)
 
     // 添加时间戳，以禁止缓存
     const avatarName = username + Date.now().toString() + path.extname(this.avatar.name)
-    const uploadPath = path.resolve(__dirname, `../public/upload/${avatarName}`)
+    const uploadPath = path.resolve(__dirname, `../../public/upload/${avatarName}`)
     const reader = fs.createReadStream(this.avatar.path)
     const writer = fs.createWriteStream(uploadPath)
     const avatar = `/upload/${avatarName}`
