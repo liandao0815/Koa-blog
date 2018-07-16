@@ -3,7 +3,7 @@
 ## 项目说明：
 **本项目实现前后端分离， 采用 Restful api 的规范，权限认证采用 token 来实现**
 
-> **前端项目：** (点击此处 →)[https://github.com/liandao0815/React-blog]
+> **前端项目：** [点击此处 →](https://github.com/liandao0815/React-blog)
 
 ## 技术栈：
 > Node.js + Koa2 + MongoDB
