@@ -1,7 +1,7 @@
 # Koa-blog
 
 ## 项目说明：
-**该项目采用前后端分离结构，对接口实现Restful api 规范，权限认证采用 token 来实现**
+**该项目采用前后端分离结构，权限认证采用 token 来实现**
 
 > **前端项目：** [点击此处 →](https://github.com/liandao0815/React-blog)
 
