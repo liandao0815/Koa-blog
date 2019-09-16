@@ -39,7 +39,7 @@ yarn install 或者 npm install
 yarn start 或者 npm run start
 ```
 
-## 项目核心代码：
+## 代码说明：
 - 项目的日志管理使用 log4js 模块，具体配置如下：
 
 ```javascript
